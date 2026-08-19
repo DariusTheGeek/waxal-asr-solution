@@ -1,0 +1,15 @@
+# fairseq2 asset card for waxal-sna-omniasr-ctc-7b.
+# Substitute @WAXAL_MODEL_DIR@ with the directory holding this file, e.g.
+#   python -c "from huggingface_hub import snapshot_download; print(snapshot_download('DariusTheGeek/waxal-sna-omniasr-ctc-7b'))"
+
+name: waxal_omni_tokenizer_written_v2
+tokenizer_family: char_tokenizer
+tokenizer: @WAXAL_MODEL_DIR@/omniASR_tokenizer_written_v2.model
+
+---
+
+name: waxal_sna_omniasr_ctc_7b
+model_family: wav2vec2_asr
+model_arch: 7b_v2
+checkpoint: @WAXAL_MODEL_DIR@/step_3563/model.pt
+tokenizer_ref: waxal_omni_tokenizer_written_v2

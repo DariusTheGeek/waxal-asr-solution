@@ -1,0 +1,47 @@
+model: {name: waxal3_omni_ctc_1b_v2_target_es_parent}
+dataset:
+  name: waxal3_lin_sna_cv002_notag
+  train_split: train
+  valid_split: dev
+  storage_mode: MANIFEST
+  task_mode: ASR
+  manifest_storage_config: {read_text: true, cached_fd_count: 256, sync_batches: true}
+  asr_task_config:
+    min_audio_len: 1
+    max_audio_len: 960000
+    batching_strategy: STATIC
+    batch_size: 2
+    drop_remainder: false
+    normalize_audio: true
+    example_shuffle_window: 32328
+    batch_shuffle_window: 1000
+    npc: 4
+    num_prefetch: 4
+tokenizer: {name: waxal3_omni_tokenizer_written_v2}
+optimizer:
+  config: {lr: 1.0e-05, betas: [0.9, 0.98], eps: 1.0e-08, weight_decay: 0.0}
+lr_scheduler:
+  config: {stage_ratio: [0.1, 0.4, 0.5], start_lr_scale: 0.01, final_lr_scale: 0.05}
+trainer:
+  data_parallelism: ddp
+  freeze_encoder_for_n_steps: 0
+  max_grad_norm: 1.0
+  grad_check: true
+  mixed_precision: {dtype: torch.bfloat16}
+  grad_accumulation: {num_batches: 4, no_sync: true}
+  activation_checkpointing: {mode: layerwise, every_nth_layer: 1}
+regime:
+  num_steps: 4044
+  validate_after_n_steps: 0
+  validate_every_n_steps: 1011
+  checkpoint_after_n_steps: 0
+  checkpoint_every_n_steps: 1011
+  publish_metrics_after_n_steps: 0
+  publish_metrics_every_n_steps: 337
+  save_model_only: false
+  keep_last_n_checkpoints: 4
+  score_metric: wer
+common:
+  seed: 42
+  no_sweep_dir: true
+  torch: {allow_tf32: false}

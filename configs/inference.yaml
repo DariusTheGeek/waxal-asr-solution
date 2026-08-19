@@ -1,0 +1,34 @@
+# Runtime settings for the full pipeline. Consumed by inference/predict.py.
+seed: 42
+device: cuda
+gpus: [0, 1, 2, 3]
+sample_rate: 16000                  # source audio is 48 kHz and is resampled
+
+lanes:
+  lin:
+    method: ttia                    # boundary-norm + ROVER candidate + idiolect selection
+    # Order is load-bearing: the first member is the ROVER pivot and order
+    # breaks LM-score ties.
+    members: [ctc3b, llm3b, llm1b, ctc1b]
+  sna:
+    method: medoid                  # fixed-order word-medoid MBR
+    # Order is load-bearing: it breaks medoid ties.
+    members: [llm3b, llm1b, ctc7b, mms1b]
+
+# Test-Time Idiolect Adaptation (stage 2). The gallery is built once by
+# inference/ttia/build_enrollment.py + embed.py + merge.py; see SOLUTION.md.
+ttia:
+  gallery: outputs/ttia/enrollment.npz
+  manifest: outputs/ttia/enrollment.parquet
+  layers: [4, 8]
+  transform: lda
+  scoring: centroid
+  train_texts: data/derived/portable/omniasr1b_lin_cv002_v1/manifests/train.rows.parquet
+
+postprocess:
+  unicode_form: NFC
+  collapse_whitespace: true
+
+submission:
+  path: outputs/submissions/final_submission.csv
+  expected_rows: 892

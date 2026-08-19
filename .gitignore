@@ -1,0 +1,20 @@
+# environments and caches
+.venvs/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# fetched or built, never committed
+weights/
+models/omniasr-*/
+models/mms-*/
+data/test_audio/
+data/derived/
+data/manifests/
+data/cv/
+outputs/
+
+# logs
+*.log
+models/publish/_logs/
+

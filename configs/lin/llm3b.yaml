@@ -1,0 +1,35 @@
+model: llm3b
+language: lin
+family: omniasr_llm_3b_v2
+repo: DariusTheGeek/waxal-lin-omniasr-llm-3b
+weights: model.pt
+asset_card: card.yaml
+seed: 42
+decode:
+  # batch_size 1 is deliberate and applies to every model.
+  #
+  # Clips in a batch are padded to the longest member, which changes the
+  # encoder output and so the decoded text. With batching, the result
+  # therefore depends on how clips happen to be grouped -- which depends
+  # on how many GPUs the work was sharded across. The reference decodes
+  # were produced on 4 ranks with uneven shards (116/105/116/110), so a
+  # 2-GPU run of the same code would not reproduce them.
+  #
+  # Decoding one clip at a time removes padding entirely, making output
+  # independent of GPU count and shard layout. It is slower, and it is
+  # the only setting under which this pipeline reproduces itself.
+  batch_size: 1
+  work_chunk: 8
+  strategy: beam
+  beam_size: 5
+  # length_norm=True is worth roughly +0.00012 Q at zero weight-file cost.
+  length_norm: true
+  # The LLM decoder takes a language conditioning token, produced by
+  # this pipeline's own stage-0 routing decision; CTC models ignore
+  # it entirely.
+  language_code: lin_Latn
+train:
+  parent: facebook/omniASR-LLM-3B-v2
+  parallelism: fsdp2
+  precision: bfloat16
+  checkpoint_average: top3

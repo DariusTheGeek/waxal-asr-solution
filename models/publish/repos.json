@@ -1,0 +1,213 @@
+{
+ "namespace": "DariusTheGeek",
+ "repos": [
+  {
+   "name": "waxal-joint-ctc-1b-lid",
+   "lane": "routing",
+   "lang": [
+    "ln",
+    "sn"
+   ],
+   "license": "apache-2.0",
+   "base": "facebook/omniASR-CTC-1B",
+   "family": "OmniASR CTC-1B v2",
+   "decode": "greedy (routing pass only)",
+   "artifact": "step 3033",
+   "batch": "A",
+   "files": [
+    {
+     "dst": "model.pt"
+    },
+    {
+     "dst": "text_lid_train_only.joblib"
+    }
+   ]
+  },
+  {
+   "name": "waxal-lin-mms-1b",
+   "lane": "lin",
+   "lang": [
+    "ln"
+   ],
+   "license": "cc-by-nc-4.0",
+   "base": "facebook/mms-1b-all",
+   "family": "MMS-1B native Lingala adapter",
+   "decode": "none: voice embedding only",
+   "artifact": "top-3 uniform average of steps 1004 / 1506 / 1757",
+   "batch": "A",
+   "files": [
+    {
+     "dst": "model.safetensors"
+    },
+    {
+     "dst": "config.json"
+    },
+    {
+     "dst": "preprocessor_config.json"
+    },
+    {
+     "dst": "vocab.json"
+    }
+   ]
+  },
+  {
+   "name": "waxal-sna-mms-1b",
+   "lane": "sna",
+   "lang": [
+    "sn"
+   ],
+   "license": "cc-by-nc-4.0",
+   "base": "facebook/mms-1b-all",
+   "family": "MMS-1B native Shona adapter, continued pre-training then supervised fine-tune",
+   "decode": "greedy",
+   "artifact": "checkpoint-2040",
+   "batch": "A",
+   "files": [
+    {
+     "dst": "model.safetensors"
+    },
+    {
+     "dst": "config.json"
+    },
+    {
+     "dst": "preprocessor_config.json"
+    },
+    {
+     "dst": "vocab.json"
+    }
+   ]
+  },
+  {
+   "name": "waxal-lin-omniasr-llm-1b",
+   "lane": "lin",
+   "lang": [
+    "ln"
+   ],
+   "license": "apache-2.0",
+   "base": "facebook/omniASR-LLM-1B-v2",
+   "family": "OmniASR LLM-1B v2",
+   "decode": "beam 5, length_norm=True",
+   "artifact": "top-3 uniform FP64 parameter average",
+   "batch": "A",
+   "files": [
+    {
+     "dst": "model.pt"
+    }
+   ]
+  },
+  {
+   "name": "waxal-sna-omniasr-llm-1b",
+   "lane": "sna",
+   "lang": [
+    "sn"
+   ],
+   "license": "apache-2.0",
+   "base": "facebook/omniASR-LLM-1B-v2",
+   "family": "OmniASR LLM-1B v2",
+   "decode": "beam 5, length_norm=True",
+   "artifact": "top-3 equal-weight parameter average",
+   "batch": "A",
+   "files": [
+    {
+     "dst": "model.pt"
+    }
+   ]
+  },
+  {
+   "name": "waxal-lin-omniasr-ctc-3b",
+   "lane": "lin",
+   "lang": [
+    "ln"
+   ],
+   "license": "apache-2.0",
+   "base": "facebook/omniASR-CTC-3B-v2",
+   "family": "OmniASR CTC-3B v2",
+   "decode": "greedy",
+   "artifact": "top-3 FP64 parameter average",
+   "batch": "A",
+   "files": [
+    {
+     "dst": "model.pt"
+    }
+   ]
+  },
+  {
+   "name": "waxal-lin-omniasr-ctc-1b",
+   "lane": "lin",
+   "lang": [
+    "ln"
+   ],
+   "license": "apache-2.0",
+   "base": "facebook/omniASR-CTC-1B",
+   "family": "OmniASR CTC-1B v2",
+   "decode": "greedy",
+   "artifact": "top-3 uniform average of steps 2505 / 3006 / 4008",
+   "batch": "B",
+   "files": [
+    {
+     "dst": "model.pt"
+    }
+   ]
+  },
+  {
+   "name": "waxal-lin-omniasr-llm-3b",
+   "lane": "lin",
+   "lang": [
+    "ln"
+   ],
+   "license": "apache-2.0",
+   "base": "facebook/omniASR-LLM-3B-v2",
+   "family": "OmniASR LLM-3B v2",
+   "decode": "beam 5, length_norm=True",
+   "artifact": "top-3 FP64 parameter average",
+   "batch": "A",
+   "files": [
+    {
+     "dst": "model.pt"
+    }
+   ]
+  },
+  {
+   "name": "waxal-sna-omniasr-llm-3b",
+   "lane": "sna",
+   "lang": [
+    "sn"
+   ],
+   "license": "apache-2.0",
+   "base": "facebook/omniASR-LLM-3B-v2",
+   "family": "OmniASR LLM-3B v2",
+   "decode": "beam 5, length_norm=True",
+   "artifact": "top-3 FP64 parameter average",
+   "batch": "A",
+   "files": [
+    {
+     "dst": "model.pt"
+    }
+   ]
+  },
+  {
+   "name": "waxal-sna-omniasr-ctc-7b",
+   "lane": "sna",
+   "lang": [
+    "sn"
+   ],
+   "license": "apache-2.0",
+   "base": "facebook/omniASR-CTC-7B-v2",
+   "family": "OmniASR CTC-7B v2",
+   "decode": "greedy, then conservative word ROVER across the three checkpoints",
+   "artifact": "three single checkpoints: steps 3563 / 4581 / 5090",
+   "batch": "B",
+   "files": [
+    {
+     "dst": "step_3563/model.pt"
+    },
+    {
+     "dst": "step_4581/model.pt"
+    },
+    {
+     "dst": "step_5090/model.pt"
+    }
+   ]
+  }
+ ]
+}

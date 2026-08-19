@@ -1,0 +1,30 @@
+model: ctc7b
+language: sna
+family: omniasr_ctc_7b_v2
+repo: DariusTheGeek/waxal-sna-omniasr-ctc-7b
+# Three checkpoints, not a parameter average: their fusion is output-space, so
+# each must decode independently before being ROVERed into one hypothesis.
+weights: [step_3563/model.pt, step_4581/model.pt, step_5090/model.pt]
+asset_card: card.yaml
+seed: 42
+decode:
+  # batch_size 1 is deliberate and applies to every model.
+  #
+  # Clips in a batch are padded to the longest member, which changes the
+  # encoder output and so the decoded text. With batching, the result
+  # therefore depends on how clips happen to be grouped -- which depends
+  # on how many GPUs the work was sharded across. The reference decodes
+  # were produced on 4 ranks with uneven shards (116/105/116/110), so a
+  # 2-GPU run of the same code would not reproduce them.
+  #
+  # Decoding one clip at a time removes padding entirely, making output
+  # independent of GPU count and shard layout. It is slower, and it is
+  # the only setting under which this pipeline reproduces itself.
+  batch_size: 1
+  work_chunk: 32
+  strategy: greedy
+  combine: conservative_word_rover
+train:
+  parent: facebook/omniASR-CTC-7B-v2
+  parallelism: fsdp2
+  precision: bfloat16

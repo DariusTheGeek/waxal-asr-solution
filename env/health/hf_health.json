@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-08-19T13:42:50.413058+00:00",
+  "errors": [],
+  "executable": ".venvs/hf/bin/python",
+  "gpu": {
+    "cuda_available": true,
+    "devices": [
+      {
+        "index": 0,
+        "name": "NVIDIA RTX A6000",
+        "tensor_check": 16.0,
+        "total_memory": 50897289216
+      },
+      {
+        "index": 1,
+        "name": "NVIDIA RTX A6000",
+        "tensor_check": 16.0,
+        "total_memory": 50897289216
+      },
+      {
+        "index": 2,
+        "name": "NVIDIA RTX A6000",
+        "tensor_check": 16.0,
+        "total_memory": 50887852032
+      },
+      {
+        "index": 3,
+        "name": "NVIDIA RTX A6000",
+        "tensor_check": 16.0,
+        "total_memory": 50897289216
+      }
+    ],
+    "gpu_count": 4,
+    "torch": "2.5.1+cu124"
+  },
+  "imports": {
+    "accelerate": {
+      "status": "pass",
+      "version": "1.1.1"
+    },
+    "datasets": {
+      "status": "pass",
+      "version": "3.1.0"
+    },
+    "librosa": {
+      "status": "pass",
+      "version": "0.10.2"
+    },
+    "peft": {
+      "status": "pass",
+      "version": "0.13.2"
+    },
+    "soundfile": {
+      "status": "pass",
+      "version": "0.12.1"
+    },
+    "torch": {
+      "status": "pass",
+      "version": "2.5.1+cu124"
+    },
+    "torchaudio": {
+      "status": "pass",
+      "version": "2.5.1+cu124"
+    },
+    "transformers": {
+      "status": "pass",
+      "version": "4.46.3"
+    }
+  },
+  "pip_check": {
+    "returncode": 0,
+    "stderr": "Using Python 3.11.13 environment at: .venvs/hf\nChecked 122 packages in 1ms\nAll installed packages are compatible\n",
+    "stdout": ""
+  },
+  "platform": "Linux-6.8.0-136-generic-x86_64-with-glibc2.35",
+  "profile": "hf",
+  "python": "3.11.13 (main, Oct  7 2025, 15:34:32) [Clang 20.1.4 ]",
+  "schema_version": 1,
+  "status": "pass"
+}

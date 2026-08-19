@@ -1,0 +1,215 @@
+"""Frozen per-experiment runtime geometry for OmniASR LLM fine-tuning."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+import os
+from pathlib import Path
+from typing import Protocol
+
+import yaml
+
+
+MANIFEST_DIR_ENV = "WAXAL3_MANIFEST_DIR"
+TRAIN_ROWS_ENV = "WAXAL3_EXPECTED_TRAIN_ROWS"
+UPDATES_PER_EPOCH_ENV = "WAXAL3_UPDATES_PER_EPOCH"
+LANGUAGE_ENV = "WAXAL3_LANGUAGE"
+LANGUAGE_CODE_ENV = "WAXAL3_LANGUAGE_CODE"
+EXPECTED_MODEL_LANGUAGE_ID_ENV = "WAXAL3_EXPECTED_MODEL_LANGUAGE_ID"
+
+LEGACY_LANGUAGE = "lin"
+LEGACY_LANGUAGE_CODE = "lin_Latn"
+LEGACY_MANIFEST_DIR = (
+    "data/derived/portable/omniasr1b_lin_cv002_v1/manifests"
+)
+LEGACY_TRAIN_ROWS = 16_035
+LEGACY_UPDATES_PER_EPOCH = 501
+
+
+@dataclass(frozen=True)
+class RuntimeGeometry:
+    language: str
+    language_code: str
+    manifest_dir: Path
+    expected_train_rows: int
+    updates_per_epoch: int
+    expected_model_language_id: int | None = None
+
+
+class LanguageMapping(Protocol):
+    def get(self, key: str, default: object = None) -> object: ...
+
+
+def _positive_int(value: object, *, name: str) -> int:
+    try:
+        result = int(value)
+    except (TypeError, ValueError) as error:
+        raise RuntimeError(f"{name} must be a positive integer") from error
+    if result <= 0:
+        raise RuntimeError(f"{name} must be a positive integer")
+    return result
+
+
+def _safe_repo_path(root: Path, value: object, *, name: str) -> Path:
+    raw = Path(str(value))
+    path = (raw if raw.is_absolute() else root / raw).expanduser().resolve()
+    try:
+        path.relative_to(root)
+    except ValueError as error:
+        raise RuntimeError(f"{name} escapes the WAXAL3 root: {path}") from error
+    if path.is_symlink() or not path.is_dir():
+        raise RuntimeError(f"{name} is not a safe directory: {path}")
+    for filename in (
+        "train.rows.parquet",
+        "train.tsv",
+        "train.wrd",
+        "dev.rows.parquet",
+        "dev.tsv",
+        "dev.wrd",
+        "dev.rank_map.world8.csv",
+    ):
+        candidate = path / filename
+        if candidate.is_symlink() or not candidate.is_file():
+            raise RuntimeError(f"{name} is incomplete: {candidate}")
+    return path
+
+
+def _optional_positive_int(value: object, *, name: str) -> int | None:
+    if value is None:
+        return None
+    if isinstance(value, str) and not value.strip():
+        return None
+    return _positive_int(value, name=name)
+
+
+def _language_code(value: object, *, name: str) -> str:
+    result = str(value).strip()
+    if (
+        not result
+        or "/" in result
+        or "\\" in result
+        or len(result.split("_")) != 2
+    ):
+        raise RuntimeError(f"invalid {name}: {result!r}")
+    return result
+
+
+def validate_model_language_id(
+    language_mapping: LanguageMapping | None, geometry: RuntimeGeometry
+) -> int:
+    """Bind the model's language table to the frozen runtime contract."""
+
+    if language_mapping is None:
+        raise RuntimeError("LLM parent lacks the required language mapping")
+    raw_language_id = language_mapping.get(geometry.language_code.casefold())
+    try:
+        language_id = int(raw_language_id)
+    except (TypeError, ValueError) as error:
+        raise RuntimeError(
+            f"unsupported OmniASR language code: {geometry.language_code}"
+        ) from error
+    if language_id <= 0:
+        raise RuntimeError(
+            f"unsupported OmniASR language code: {geometry.language_code}"
+        )
+    expected = geometry.expected_model_language_id
+    if expected is not None and language_id != expected:
+        raise RuntimeError(
+            "OmniASR model language ID drift for "
+            f"{geometry.language_code}: {language_id} != {expected}"
+        )
+    return language_id
+
+
+def runtime_geometry_from_environment(root: Path) -> RuntimeGeometry:
+    """Resolve the launcher's frozen runtime variables."""
+
+    root = root.resolve()
+    language = os.environ.get(LANGUAGE_ENV, LEGACY_LANGUAGE).strip()
+    if not language or "/" in language or "\\" in language:
+        raise RuntimeError(f"invalid {LANGUAGE_ENV}: {language!r}")
+    manifest_dir = _safe_repo_path(
+        root,
+        os.environ.get(MANIFEST_DIR_ENV, LEGACY_MANIFEST_DIR),
+        name=MANIFEST_DIR_ENV,
+    )
+    return RuntimeGeometry(
+        language=language,
+        language_code=_language_code(
+            os.environ.get(LANGUAGE_CODE_ENV, LEGACY_LANGUAGE_CODE),
+            name=LANGUAGE_CODE_ENV,
+        ),
+        manifest_dir=manifest_dir,
+        expected_train_rows=_positive_int(
+            os.environ.get(TRAIN_ROWS_ENV, LEGACY_TRAIN_ROWS), name=TRAIN_ROWS_ENV
+        ),
+        updates_per_epoch=_positive_int(
+            os.environ.get(UPDATES_PER_EPOCH_ENV, LEGACY_UPDATES_PER_EPOCH),
+            name=UPDATES_PER_EPOCH_ENV,
+        ),
+        expected_model_language_id=_optional_positive_int(
+            os.environ.get(EXPECTED_MODEL_LANGUAGE_ID_ENV),
+            name=EXPECTED_MODEL_LANGUAGE_ID_ENV,
+        ),
+    )
+
+
+def runtime_geometry_from_experiment(
+    experiment_dir: Path, root: Path
+) -> RuntimeGeometry:
+    """Read a live experiment or its materialized packet runtime contract."""
+
+    experiment_dir = experiment_dir.resolve()
+    live_specification = experiment_dir / "experiment.yaml"
+    packet_specification = experiment_dir / "resolved_experiment.yaml"
+    if live_specification.is_file() and not live_specification.is_symlink():
+        specification_path = live_specification
+    elif (
+        (experiment_dir / "PACKET.json").is_file()
+        and not (experiment_dir / "PACKET.json").is_symlink()
+        and packet_specification.is_file()
+        and not packet_specification.is_symlink()
+    ):
+        specification_path = packet_specification
+    else:
+        specification_path = live_specification
+    if specification_path.is_symlink() or not specification_path.is_file():
+        raise RuntimeError(f"unsafe or missing experiment specification: {specification_path}")
+    specification = yaml.safe_load(specification_path.read_text(encoding="utf-8"))
+    if not isinstance(specification, dict):
+        raise RuntimeError("experiment specification is not an object")
+    contract = specification.get("runtime_contract")
+    if contract is None:
+        contract = {
+            "language": specification.get("language", LEGACY_LANGUAGE),
+            "language_code": LEGACY_LANGUAGE_CODE,
+            "manifest_dir": LEGACY_MANIFEST_DIR,
+            "expected_train_rows": LEGACY_TRAIN_ROWS,
+            "updates_per_epoch": LEGACY_UPDATES_PER_EPOCH,
+        }
+    if not isinstance(contract, dict):
+        raise RuntimeError("runtime_contract is not an object")
+    language = str(contract.get("language", "")).strip()
+    if language != str(specification.get("language", "")).strip():
+        raise RuntimeError("runtime language does not match experiment language")
+    if not language or "/" in language or "\\" in language:
+        raise RuntimeError(f"invalid runtime language: {language!r}")
+    return RuntimeGeometry(
+        language=language,
+        language_code=_language_code(
+            contract.get("language_code"), name="runtime language_code"
+        ),
+        manifest_dir=_safe_repo_path(
+            root.resolve(), contract.get("manifest_dir"), name="runtime manifest_dir"
+        ),
+        expected_train_rows=_positive_int(
+            contract.get("expected_train_rows"), name="runtime expected_train_rows"
+        ),
+        updates_per_epoch=_positive_int(
+            contract.get("updates_per_epoch"), name="runtime updates_per_epoch"
+        ),
+        expected_model_language_id=_optional_positive_int(
+            contract.get("expected_model_language_id"),
+            name="runtime expected_model_language_id",
+        ),
+    )

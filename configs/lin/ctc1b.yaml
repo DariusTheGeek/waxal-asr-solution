@@ -1,0 +1,32 @@
+model: ctc1b
+language: lin
+family: omniasr_ctc_1b_v2
+repo: DariusTheGeek/waxal-lin-omniasr-ctc-1b
+weights: model.pt
+asset_card: card.yaml
+seed: 42
+decode:
+  # batch_size 1 is deliberate and applies to every model.
+  #
+  # Clips in a batch are padded to the longest member, which changes the
+  # encoder output and so the decoded text. With batching, the result
+  # therefore depends on how clips happen to be grouped -- which depends
+  # on how many GPUs the work was sharded across. The reference decodes
+  # were produced on 4 ranks with uneven shards (116/105/116/110), so a
+  # 2-GPU run of the same code would not reproduce them.
+  #
+  # Decoding one clip at a time removes padding entirely, making output
+  # independent of GPU count and shard layout. It is slower, and it is
+  # the only setting under which this pipeline reproduces itself.
+  batch_size: 1
+  work_chunk: 32
+  strategy: greedy
+train:
+  parent: facebook/omniASR-CTC-1B
+  parallelism: ddp
+  precision: bfloat16
+  per_gpu_batch: 2
+  gradient_accumulation: 2
+  peak_learning_rate: 1.0e-5
+  schedule: tri_stage_0.1_0.4_0.5
+  checkpoint_average: top3_uniform  # steps 2505 / 3006 / 4008

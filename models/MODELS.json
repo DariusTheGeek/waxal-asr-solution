@@ -1,0 +1,312 @@
+{
+  "schema_version": 1,
+  "namespace": "DariusTheGeek",
+  "repos": [
+    {
+      "name": "waxal-joint-ctc-1b-lid",
+      "lane": "routing",
+      "license": "apache-2.0",
+      "base_model": "facebook/omniASR-CTC-1B",
+      "family": "OmniASR CTC-1B v2",
+      "artifact": "step 3033",
+      "decode": "greedy (routing pass only)",
+      "revision": "main",
+      "bytes": 3905027400,
+      "files": [
+        {
+          "path": "model.pt",
+          "bytes": 3903024817,
+          "sha256": "8980debc8f3a5c2813b2bb8b46ba6d58cbd1ac049b5c93967a0a1fe6237efa39"
+        },
+        {
+          "path": "text_lid_train_only.joblib",
+          "bytes": 1910530,
+          "sha256": "4452522e27ace25414593fcf7f3f27e3d135a16820673b4d2062487b537198e4"
+        },
+        {
+          "path": "card.yaml",
+          "bytes": 572,
+          "sha256": "2be6395f6cf8cccd4e83f6fd1465fd51bf2a5285e3179babeaaa7a9a855f09bc"
+        },
+        {
+          "path": "omniASR_tokenizer_written_v2.model",
+          "bytes": 91481,
+          "sha256": "8aa11a1092142ef472537476ef6e76541123e2f0d789b79f3ebd119008240b1e"
+        }
+      ]
+    },
+    {
+      "name": "waxal-lin-mms-1b",
+      "lane": "lin",
+      "license": "cc-by-nc-4.0",
+      "base_model": "facebook/mms-1b-all",
+      "family": "MMS-1B native Lingala adapter",
+      "artifact": "top-3 uniform average of steps 1004 / 1506 / 1757",
+      "decode": "none: hidden-state embedding for TTIA profile matching",
+      "revision": "main",
+      "bytes": 3858960487,
+      "files": [
+        {
+          "path": "model.safetensors",
+          "bytes": 3858957656,
+          "sha256": "bf8d2521fcfda0658302e4bcd29f4515e41a283341a20867f81cc30a9dde07dd"
+        },
+        {
+          "path": "config.json",
+          "bytes": 2002,
+          "sha256": "31d7b2cf584b48bfd5b563e760a076868942f9b8782d112f0117cd1bc68152d5"
+        },
+        {
+          "path": "preprocessor_config.json",
+          "bytes": 254,
+          "sha256": "f724fdad65341e79bd9741888fe4e8ce1bb2e7b44fc8216c28c591afb1e202f4"
+        },
+        {
+          "path": "vocab.json",
+          "bytes": 505,
+          "sha256": "62e7ce4b8e7389d79864e5eef0a61ff7a60bd4b5104efd48de6f74abdb3c96f5"
+        }
+      ]
+    },
+    {
+      "name": "waxal-sna-mms-1b",
+      "lane": "sna",
+      "license": "cc-by-nc-4.0",
+      "base_model": "facebook/mms-1b-all",
+      "family": "MMS-1B native Shona adapter, continued pre-training then supervised fine-tune",
+      "artifact": "checkpoint-2040",
+      "decode": "greedy",
+      "revision": "main",
+      "bytes": 3858934672,
+      "files": [
+        {
+          "path": "model.safetensors",
+          "bytes": 3858931916,
+          "sha256": "9f0d0231af5398402376d1ccc53a1f377bc31a55fca747ab685fdc38c72a88e2"
+        },
+        {
+          "path": "config.json",
+          "bytes": 2002,
+          "sha256": "50890153eb462fb2e7657aeca9caa339377d201ed7c6fd1f44013a04d30e128e"
+        },
+        {
+          "path": "preprocessor_config.json",
+          "bytes": 254,
+          "sha256": "f724fdad65341e79bd9741888fe4e8ce1bb2e7b44fc8216c28c591afb1e202f4"
+        },
+        {
+          "path": "vocab.json",
+          "bytes": 430,
+          "sha256": "bec948a8a54ff0c036971b98bb19435fe48663eacc1c4080628e314681dc2854"
+        }
+      ]
+    },
+    {
+      "name": "waxal-lin-omniasr-llm-1b",
+      "lane": "lin",
+      "license": "apache-2.0",
+      "base_model": "facebook/omniASR-LLM-1B-v2",
+      "family": "OmniASR LLM-1B v2",
+      "artifact": "top-3 uniform FP64 parameter average",
+      "decode": "beam 5, length_norm=True",
+      "revision": "main",
+      "bytes": 9118772566,
+      "files": [
+        {
+          "path": "model.pt",
+          "bytes": 9118680523,
+          "sha256": "cedeea419035678c6ff45e4f70c79e8346fec78c76f216c45027933d128617c3"
+        },
+        {
+          "path": "card.yaml",
+          "bytes": 562,
+          "sha256": "6865da1961429a9251101d870a418c04e71abef8c80af0fc144267baa93eaeac"
+        },
+        {
+          "path": "omniASR_tokenizer_written_v2.model",
+          "bytes": 91481,
+          "sha256": "8aa11a1092142ef472537476ef6e76541123e2f0d789b79f3ebd119008240b1e"
+        }
+      ]
+    },
+    {
+      "name": "waxal-sna-omniasr-llm-1b",
+      "lane": "sna",
+      "license": "apache-2.0",
+      "base_model": "facebook/omniASR-LLM-1B-v2",
+      "family": "OmniASR LLM-1B v2",
+      "artifact": "top-3 equal-weight parameter average",
+      "decode": "beam 5, length_norm=True",
+      "revision": "main",
+      "bytes": 9118772566,
+      "files": [
+        {
+          "path": "model.pt",
+          "bytes": 9118680523,
+          "sha256": "a35debac37078c98b40f8833f54ef6c0c83405dd78141b463ed2bbb3e8723135"
+        },
+        {
+          "path": "card.yaml",
+          "bytes": 562,
+          "sha256": "53d61ffd360f958e2d305710b45791b4f9d1fdaf36333e039f927e55e25907e2"
+        },
+        {
+          "path": "omniASR_tokenizer_written_v2.model",
+          "bytes": 91481,
+          "sha256": "8aa11a1092142ef472537476ef6e76541123e2f0d789b79f3ebd119008240b1e"
+        }
+      ]
+    },
+    {
+      "name": "waxal-lin-omniasr-ctc-3b",
+      "lane": "lin",
+      "license": "apache-2.0",
+      "base_model": "facebook/omniASR-CTC-3B-v2",
+      "family": "OmniASR CTC-3B v2",
+      "artifact": "top-3 FP64 parameter average",
+      "decode": "greedy",
+      "revision": "main",
+      "bytes": 12325989924,
+      "files": [
+        {
+          "path": "model.pt",
+          "bytes": 12325897883,
+          "sha256": "28775159c16d64e8b252ed3f0711b9b4a0fb6e61e179a873bf32fa6a8be5c53f"
+        },
+        {
+          "path": "card.yaml",
+          "bytes": 560,
+          "sha256": "b2d5948bc71fa218514b0450fc2395d9eff7fcbd79d7cd2f43d0b9ca5a112c32"
+        },
+        {
+          "path": "omniASR_tokenizer_written_v2.model",
+          "bytes": 91481,
+          "sha256": "8aa11a1092142ef472537476ef6e76541123e2f0d789b79f3ebd119008240b1e"
+        }
+      ]
+    },
+    {
+      "name": "waxal-lin-omniasr-ctc-1b",
+      "lane": "lin",
+      "license": "apache-2.0",
+      "base_model": "facebook/omniASR-CTC-1B",
+      "family": "OmniASR CTC-1B v2",
+      "artifact": "top-3 uniform average of steps 2505 / 3006 / 4008",
+      "decode": "greedy",
+      "revision": "main",
+      "files": [
+        {
+          "path": "model.pt",
+          "bytes": 3902903831,
+          "sha256": "d98a1e0877ce7cb303c76523af2374ebe2a9a023527ed6f24347ef6d8565d6b6"
+        },
+        {
+          "path": "card.yaml",
+          "bytes": 560,
+          "sha256": "49e290f5af9b0ec63f7251d3403871b874f3069889659b242d1998d667b070e5"
+        },
+        {
+          "path": "omniASR_tokenizer_written_v2.model",
+          "bytes": 91481,
+          "sha256": "8aa11a1092142ef472537476ef6e76541123e2f0d789b79f3ebd119008240b1e"
+        }
+      ],
+      "bytes": 3902995872
+    },
+    {
+      "name": "waxal-lin-omniasr-llm-3b",
+      "lane": "lin",
+      "license": "apache-2.0",
+      "base_model": "facebook/omniASR-LLM-3B-v2",
+      "family": "OmniASR LLM-3B v2",
+      "artifact": "top-3 FP64 parameter average",
+      "decode": "beam 5, length_norm=True",
+      "revision": "main",
+      "bytes": 17522745621,
+      "files": [
+        {
+          "path": "model.pt",
+          "bytes": 17522653578,
+          "sha256": "d9fea841eea50fdafdfb0c19792e7f94090808eba3719a28ded557b0d1a358a2"
+        },
+        {
+          "path": "card.yaml",
+          "bytes": 562,
+          "sha256": "214191d3352ae502124357cc77c7d834c89a631ebcf225480f6eca8a7be7fba3"
+        },
+        {
+          "path": "omniASR_tokenizer_written_v2.model",
+          "bytes": 91481,
+          "sha256": "8aa11a1092142ef472537476ef6e76541123e2f0d789b79f3ebd119008240b1e"
+        }
+      ]
+    },
+    {
+      "name": "waxal-sna-omniasr-llm-3b",
+      "lane": "sna",
+      "license": "apache-2.0",
+      "base_model": "facebook/omniASR-LLM-3B-v2",
+      "family": "OmniASR LLM-3B v2",
+      "artifact": "top-3 FP64 parameter average",
+      "decode": "beam 5, length_norm=True",
+      "revision": "main",
+      "bytes": 17522745621,
+      "files": [
+        {
+          "path": "model.pt",
+          "bytes": 17522653578,
+          "sha256": "4b7487ad6f21ceddf6e2f9b05b384110e598582780a9bea1134e63f57b3ed6be"
+        },
+        {
+          "path": "card.yaml",
+          "bytes": 562,
+          "sha256": "5b22151d5bcce4902c9bf364feeea2e5fa5529bee830f0732efdc39e3300aae9"
+        },
+        {
+          "path": "omniASR_tokenizer_written_v2.model",
+          "bytes": 91481,
+          "sha256": "8aa11a1092142ef472537476ef6e76541123e2f0d789b79f3ebd119008240b1e"
+        }
+      ]
+    },
+    {
+      "name": "waxal-sna-omniasr-ctc-7b",
+      "lane": "sna",
+      "license": "apache-2.0",
+      "base_model": "facebook/omniASR-CTC-7B-v2",
+      "family": "OmniASR CTC-7B v2",
+      "artifact": "three single checkpoints: steps 3563 / 4581 / 5090",
+      "decode": "greedy, then conservative word ROVER across the three checkpoints",
+      "revision": "main",
+      "bytes": 78071212577,
+      "files": [
+        {
+          "path": "step_3563/model.pt",
+          "bytes": 26023706842,
+          "sha256": "59120ae466c8ef1b9d10985d5bc02a419273f92c32a9970e3479978134cadb4a"
+        },
+        {
+          "path": "step_4581/model.pt",
+          "bytes": 26023706842,
+          "sha256": "7596a567e88b8b95c81bda29dff24e7c95b34315c4a03acf67be931f132fcf4c"
+        },
+        {
+          "path": "step_5090/model.pt",
+          "bytes": 26023706842,
+          "sha256": "b1105e2a6d725cbebef495b346c8cff0f2fb5944d3c803ca9c06f01c01c4b103"
+        },
+        {
+          "path": "card.yaml",
+          "bytes": 570,
+          "sha256": "d08127a138d000176b85028521890b5e4df28e99e2b0c1a4ada0669b1f0be410"
+        },
+        {
+          "path": "omniASR_tokenizer_written_v2.model",
+          "bytes": 91481,
+          "sha256": "8aa11a1092142ef472537476ef6e76541123e2f0d789b79f3ebd119008240b1e"
+        }
+      ]
+    }
+  ],
+  "total_bytes": 159206157306
+}

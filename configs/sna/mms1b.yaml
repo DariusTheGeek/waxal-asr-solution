@@ -1,0 +1,18 @@
+model: mms1b
+language: sna
+family: mms_1b_native_adapter
+repo: DariusTheGeek/waxal-sna-mms-1b
+weights: model.safetensors
+seed: 42
+decode:
+  # One clip at a time, for the same reason as the OmniASR models: batched
+  # clips are padded to the longest member, which makes the output depend
+  # on how work was grouped across GPUs.
+  batch_size: 1
+  strategy: greedy
+  sentence_case: false
+train:
+  parent: facebook/mms-1b-all
+  adapter: sna
+  passes: 4
+  regularisation: l2sp

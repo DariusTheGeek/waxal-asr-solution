@@ -1,0 +1,23 @@
+# Stage 0: decide each clip's language from its audio.
+#
+# A tag-free bilingual model transcribes every clip, then a character n-gram
+# classifier fitted on gold training transcripts reads those transcripts and
+# routes each clip on that decision.
+joint_model:
+  repo: DariusTheGeek/waxal-joint-ctc-1b-lid
+  checkpoint: model.pt
+  decode: greedy
+
+classifier:
+  path: artifacts/text_lid_train_only.joblib
+  # The keys below record constants that route.py enforces from its own code;
+  # they are kept here for inspection, not read at runtime.
+  # sklearn pickles are not version portable; route.py refuses any other version.
+  fitted_sklearn_version: "1.5.2"
+  classes: [lin, sna]
+  # Below this margin a routing decision is reported for inspection rather than
+  # trusted silently.
+  low_margin_warn: 0.10
+
+expected:
+  rows: 892

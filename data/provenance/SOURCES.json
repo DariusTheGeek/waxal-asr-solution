@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "datasets": [
+    {
+      "role": "supervised_training_and_validation",
+      "name": "Waxal NLP",
+      "hub_id": "google/WaxalNLP",
+      "url": "https://huggingface.co/datasets/google/WaxalNLP",
+      "languages": ["lin", "sna"],
+      "used_for": [
+        "supervised fine-tuning of every released model",
+        "fitting the text language classifier (gold transcripts only)",
+        "train/validation manifests (fixed hold-out validation set)",
+        "the TTIA enrolment gallery: training clips plus unlabelled-release clips, grouped into idiolect profiles by the release's per-contributor identifiers"
+      ]
+    },
+    {
+      "role": "evaluation",
+      "name": "Google Waxal ASR Challenge test clips",
+      "provider": "Zindi",
+      "url": "https://zindi.africa/competitions/google-waxal-asr-challenge",
+      "rows": 892,
+      "labels_available": false,
+      "notes": "Audio only. Stage 0 derives each clip's language from its decoded text; stage 2 derives each clip's idiolect-profile key from its voice vector."
+    }
+  ],
+  "parent_models": [
+    {"hub_id": "facebook/omniASR-CTC-1B",    "license": "apache-2.0"},
+    {"hub_id": "facebook/omniASR-CTC-3B-v2", "license": "apache-2.0"},
+    {"hub_id": "facebook/omniASR-CTC-7B-v2", "license": "apache-2.0"},
+    {"hub_id": "facebook/omniASR-LLM-1B-v2", "license": "apache-2.0"},
+    {"hub_id": "facebook/omniASR-LLM-3B-v2", "license": "apache-2.0"},
+    {"hub_id": "facebook/mms-1b-all",        "license": "cc-by-nc-4.0",
+     "notes": "Non-commercial. Inherited by the two released MMS models."}
+  ],
+  "audio_handling": {
+    "source_sample_rate": 48000,
+    "model_sample_rate": 16000,
+    "resampling": "librosa, mono",
+    "trimming": "none",
+    "augmentation_at_inference": "none"
+  }
+}

@@ -1,0 +1,10 @@
+# Inference pins for this model (fairseq2 stack). Full lock: env/requirements-omni.txt
+# in the solution repository -- torch here is the cu126 build.
+torch==2.8.0
+torchaudio==2.8.0
+omnilingual-asr==0.2.0
+fairseq2==0.6
+fairseq2n==0.6
+numpy==1.26.4
+PyYAML==6.0.3
+huggingface_hub==0.36.2

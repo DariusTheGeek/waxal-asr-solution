@@ -1,0 +1,20 @@
+# Filesystem layout. Every path is relative to the repository root.
+#
+# inference/predict.py reads data.audio and the outputs block. The remaining
+# keys are documentation of where the other pieces live; each tool takes its
+# own path argument rather than reading them here.
+data:
+  audio: data/test_audio            # the competition test clips
+  manifests: data/derived/portable/<corpus>/manifests   # built train/validation manifests
+weights: weights                    # populated by models/download_models.py
+# Stage outputs are named for what they hold; the pipeline order is defined
+# in inference/predict.py alone: route -> decodes -> ttia -> fused -> submissions.
+outputs:
+  root: outputs
+  route: outputs/route              # routing
+  decodes: outputs/decodes          # per-model decodes
+  ttia: outputs/ttia                # enrolment gallery, test embeddings, keys
+  fused: outputs/fused              # fused lanes
+  submissions: outputs/submissions
+  logs: outputs/logs
+artifacts: artifacts                # the language classifier ships here, in git

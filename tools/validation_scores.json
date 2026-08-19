@@ -1,0 +1,43 @@
+{
+  "created_at_utc": "2026-08-19T18:29:23.286519+00:00",
+  "manifest": "data/derived/omniasr/lin_cv002_supervised_v1/manifests/dev.rows.parquet",
+  "metric": "pooled case-sensitive CER, pooled case-folded WER, Q = 1 - (CER + WER) / 2; unweighted over all validation rows",
+  "schema_version": 1,
+  "surfaces": {
+    "lin_ctc1b": {
+      "blank_hypotheses": 1,
+      "cer": 0.13357564426337012,
+      "rows": 900,
+      "score": 0.7555648052356129,
+      "wer": 0.3552947452654041
+    },
+    "lin_ctc3b": {
+      "blank_hypotheses": 1,
+      "cer": 0.13054792035830393,
+      "rows": 900,
+      "score": 0.7623181596242241,
+      "wer": 0.34481576039324774
+    },
+    "lin_llm1b": {
+      "blank_hypotheses": 0,
+      "cer": 0.14076125629613093,
+      "rows": 900,
+      "score": 0.7543345339904095,
+      "wer": 0.35056967572305
+    },
+    "lin_llm3b": {
+      "blank_hypotheses": 0,
+      "cer": 0.13923344169887403,
+      "rows": 900,
+      "score": 0.7557652857809025,
+      "wer": 0.34923598673932094
+    },
+    "lin_mms1b": {
+      "blank_hypotheses": 0,
+      "cer": 0.1350476482817318,
+      "rows": 900,
+      "score": 0.7504657349796615,
+      "wer": 0.36402088175894526
+    }
+  }
+}

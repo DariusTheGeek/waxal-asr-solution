@@ -1,0 +1,27 @@
+name: waxal3_omni_tokenizer_written_v2
+tokenizer_family: char_tokenizer
+tokenizer: @WAXAL3_REPO_ROOT@/models/omniasr-ctc-7b-v2/omniASR_tokenizer_written_v2.model
+
+---
+
+name: waxal3_omni_ctc_7b_v2_target_es_parent
+model_family: wav2vec2_asr
+model_arch: 7b_v2
+checkpoint: @WAXAL3_REPO_ROOT@/models/omniasr-ctc-7b-v2/omniASR-CTC-7B-v2.pt
+tokenizer_ref: waxal3_omni_tokenizer_written_v2
+
+---
+
+name: waxal3_lin_cv002_portable
+dataset_family: manifest_asr_dataset
+dataset_config:
+  data: @WAXAL3_REPO_ROOT@/data/derived/portable/omniasr1b_lin_cv002_v1/manifests
+tokenizer_ref: waxal3_omni_tokenizer_written_v2
+
+---
+
+name: waxal3_sna_cv002_portable
+dataset_family: manifest_asr_dataset
+dataset_config:
+  data: @WAXAL3_REPO_ROOT@/data/derived/portable/omniasr1b_sna_cv002_v1/manifests
+tokenizer_ref: waxal3_omni_tokenizer_written_v2

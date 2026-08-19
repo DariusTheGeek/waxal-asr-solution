@@ -1,0 +1,49 @@
+{
+  "created_at": "2026-08-19T13:42:54.604481+00:00",
+  "errors": [],
+  "executable": ".venvs/fuse/bin/python",
+  "imports": {
+    "Levenshtein": {
+      "status": "pass",
+      "version": "0.26.1"
+    },
+    "editdistance": {
+      "status": "pass",
+      "version": null
+    },
+    "jiwer": {
+      "status": "pass",
+      "version": null
+    },
+    "joblib": {
+      "status": "pass",
+      "version": "1.4.2"
+    },
+    "numpy": {
+      "status": "pass",
+      "version": "1.26.4"
+    },
+    "pandas": {
+      "status": "pass",
+      "version": "2.2.3"
+    },
+    "rapidfuzz": {
+      "status": "pass",
+      "version": "3.11.0"
+    },
+    "sklearn": {
+      "status": "pass",
+      "version": "1.5.2"
+    }
+  },
+  "pip_check": {
+    "returncode": 0,
+    "stderr": "Using Python 3.11.13 environment at: .venvs/fuse\nChecked 107 packages in 1ms\nAll installed packages are compatible\n",
+    "stdout": ""
+  },
+  "platform": "Linux-6.8.0-136-generic-x86_64-with-glibc2.35",
+  "profile": "fuse",
+  "python": "3.11.13 (main, Oct  7 2025, 15:34:32) [Clang 20.1.4 ]",
+  "schema_version": 1,
+  "status": "pass"
+}
