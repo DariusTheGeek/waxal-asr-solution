@@ -19,8 +19,9 @@ set -e
 #   3  TTIA (Lingala) and medoid (Shona) fusion   -> outputs/fused/*.csv
 #   4  normalisation and submission write         -> outputs/submissions/
 #
-# Model weights must be present first:
-#   python models/download_models.py
+# Model weights and TTIA data assets must be present first:
+#   .venvs/hf/bin/python models/download_models.py
+#   .venvs/hf/bin/python models/download_assets.py
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 

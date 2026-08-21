@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "namespace": "DariusTheGeek",
+  "repo": {
+    "name": "waxal-ttia-gallery",
+    "type": "dataset",
+    "license": "cc-by-sa-4.0",
+    "revision": "main",
+    "bytes": 1002946741,
+    "files": [
+      {
+        "path": "enrollment.npz",
+        "dest": "outputs/ttia/enrollment.npz",
+        "bytes": 997810461,
+        "sha256": "e112a828ef220fc38eb6ff6e24c49a3e2ec38834f2e806ade0fe3bbdf1fe7086"
+      },
+      {
+        "path": "enrollment.parquet",
+        "dest": "outputs/ttia/enrollment.parquet",
+        "bytes": 661277,
+        "sha256": "4fb6005ce024683ea4d5a111615438ba204a37ac7a4a0a57f935046d81f75ce7"
+      },
+      {
+        "path": "train.rows.parquet",
+        "dest": "data/derived/portable/omniasr1b_lin_cv002_v1/manifests/train.rows.parquet",
+        "bytes": 4475003,
+        "sha256": "b44df5ca8e370df28408bb71ad6628aaa6d316ccf3a4e6b97d11d17d663e53bc"
+      }
+    ]
+  }
+}

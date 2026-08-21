@@ -5,7 +5,7 @@ on Zindi: two four-model ensembles — one per language — plus a routing model
 and a Lingala voice embedder, all fine-tuned speech models, transcribing
 Lingala and Shona audio. Shona fuses by word-medoid MBR. Lingala fuses by
 Test-Time Idiolect Adaptation (TTIA): each test clip's voice is matched against
-an enrolment gallery of speaker profiles, and the fusion scores its candidates
+an enrolment gallery of idiolect profiles, and the fusion scores its candidates
 against the matched profile's training text.
 
 Ranked **9th** on the private leaderboard (Q 0.7675). Every per-clip decision
@@ -52,12 +52,14 @@ voice to an idiolect profile, fuse per lane, and write the submission.
 | Evaluation audio (`data/test_audio/`) | 892 WAV clips, 48 kHz | what the pipeline transcribes |
 | `google/WaxalNLP` gold transcripts | 32,328 rows | fine-tuning, the text language classifier, TTIA training text |
 | `google/WaxalNLP` unlabelled release | 5,531 clips used | pool audio for the TTIA gallery |
-| Enrolment gallery (built once) | 21,566 clips · 84 profiles | TTIA voice matching |
+| Enrolment gallery ([`waxal-ttia-gallery`](https://huggingface.co/datasets/DariusTheGeek/waxal-ttia-gallery)) | 21,566 clips · 84 profiles | TTIA voice matching |
 
 Place the evaluation clips under `data/test_audio/`, one WAV per clip named
 by its ID (`data/test_audio/ID_AAOODF.wav`, …) — the pipeline matches clips to
 IDs by filename stem. Nothing under `data/` is committed except
-`data/provenance/SOURCES.json`; training manifests and audio are built from
+`data/provenance/SOURCES.json`; the enrolment gallery and TTIA training text
+are fetched by [`models/download_assets.py`](models/download_assets.py), and
+training manifests and audio are built from
 `google/WaxalNLP` into `data/derived/` (copy or hardlink data in — the
 training code rejects paths that escape the repository, `cp -al` links a
 corpus in at no storage cost on one filesystem).
@@ -213,9 +215,10 @@ thresholds are in the code, not tuned per clip; member order is load-bearing
 | Final submission | 0.758111283 | 0.767487837 | **9** |
 
 That row is the competition submission, whose Lingala lane fused by four-member
-conservative word ROVER. The default configuration in this repository fuses that
-lane by TTIA instead ([`configs/inference.yaml`](configs/inference.yaml)); it
-was not submitted and no leaderboard score is claimed for it. Per-model
+conservative word ROVER — reproduced by setting `lanes.lin.method` to `"rover"`.
+The default configuration in this repository fuses that lane by TTIA
+([`configs/inference.yaml`](configs/inference.yaml)), the refinement described
+above, scored on validation only. Per-model
 validation scores for the Lingala lane are recorded in
 [`tools/validation_scores.json`](tools/validation_scores.json); GPU decoding is
 not bit-exact across hardware, so a rerun reproduces the submission closely
@@ -231,16 +234,21 @@ rather than exactly.
 ### 1. Inference
 
 ```bash
-bash install.sh                      # three environments, ~15 min
-python models/download_models.py     # all model weights, 159 GB, verified
+bash install.sh                                  # three environments, ~15 min
+.venvs/hf/bin/python models/download_models.py   # all model weights, 159 GB, verified
+.venvs/hf/bin/python models/download_assets.py   # TTIA gallery + training text, ~1 GB, verified
 # place the test clips under data/test_audio/
-# put the TTIA gallery under outputs/ttia/ -- see inference/ttia/build_enrollment.py
-# the Lingala TTIA lane also reads per-profile training text from
-#   data/derived/portable/<corpus>/manifests/train.rows.parquet
-#   (configs/inference.yaml: ttia.train_texts) -- build it from google/WaxalNLP.
-#   Setting lanes.lin.method to "rover" runs that lane with no derived data.
-bash run_inference.sh                # audio in, submission out
+bash run_inference.sh                            # audio in, submission out
 ```
+
+The second downloader fetches the two data assets the Lingala TTIA lane
+reads — the enrolment gallery (`outputs/ttia/`) and the per-profile training
+text (`configs/inference.yaml: ttia.train_texts`) — from
+[`DariusTheGeek/waxal-ttia-gallery`](https://huggingface.co/datasets/DariusTheGeek/waxal-ttia-gallery).
+Both can instead be rebuilt from `google/WaxalNLP` with
+[`inference/ttia/build_enrollment.py`](inference/ttia/build_enrollment.py)
+(the rebuild produces the same bytes), and setting `lanes.lin.method` to
+`"rover"` runs that lane with neither.
 
 Run the tests with `.venvs/fuse/bin/python -m pytest` (80 tests, CPU, seconds).
 
@@ -248,8 +256,9 @@ Output: `outputs/submissions/final_submission.csv`, alongside a
 `RUN_RECORD.json` carrying the row count, the SHA-256 and the elapsed time.
 `--dry-run` prints the plan without running anything; `--from-stage N` resumes
 (0 routing, 1 decodes, 2 TTIA matching, 3 fusion, 4 submission). The
-downloader verifies every file against
-[`models/MODELS.json`](models/MODELS.json) and treats a digest mismatch as
+downloaders verify every file against
+[`models/MODELS.json`](models/MODELS.json) and
+[`models/ASSETS.json`](models/ASSETS.json) and treat a digest mismatch as
 fatal; `--verify-only` re-checks disk without downloading.
 
 ### 2. Training
@@ -348,7 +357,7 @@ stage is.
 | [`inference/`](inference/) | the orchestrator and one directory per stage: [`decode/`](inference/decode/), [`route/`](inference/route/), [`ttia/`](inference/ttia/), [`fuse/`](inference/fuse/), [`submit/`](inference/submit/) |
 | [`train/families/`](train/families/) | training code, verbatim, one directory per family — kept as the record of what trained the released weights, including internal run identifiers and its own test suites, which expect the original training workspace |
 | [`train/recipes/`](train/recipes/) | the run configs those families train against |
-| [`models/`](models/) | weight manifest and downloader, HF cards, publish tooling |
+| [`models/`](models/) | weight and asset manifests and downloaders, HF cards, publish tooling |
 | [`artifacts/`](artifacts/) | the committed language classifier |
 | [`tools/`](tools/) | validation scorer, decode-surface verifier |
 | [`tests/`](tests/) | fusion behaviour, shared-code drift, repository contracts |
